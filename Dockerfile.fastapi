@@ -1,0 +1,15 @@
+FROM python:latest
+
+COPY ./backend /var/www/
+WORKDIR /var/www/
+
+RUN pip install --upgrade pip
+
+RUN pip3 install "fastapi[all]" aioredis
+
+ENV uvicorn="/usr/local/bin/uvicorn"
+
+EXPOSE 8000
+
+ENTRYPOINT ["uvicorn", "main:app", "--reload"]
+

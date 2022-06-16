@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  backend:
+    container_name: platform_backend
+    build: 
+      context: .
+      dockerfile: Dockerfile.fastapi
+    tty: true
+    volumes: 
+      - "./backend:/var/www/"
+  frontend:
+    container_name: platform_frontend
+    build: 
+      context: .
+      dockerfile: Dockerfile.spa
+    tty: true
+    volumes: 
+      - "./frontend/app/:/var/www/"
+  nginx:
+    container_name: platform_frontend
+    build: 
+      context: .
+      dockerfile: Dockerfile.nginx
+    tty: true
+    volumes: 
+      - "./frontend/app/:/var/www/"
+  redis:
+    container_name: platform_redis
+    image: redis:latest
+    command: redis redis-server --save 60 1 --loglevel warning
+    tty: true
+
+networks:
+  platform_net:
+    driver: bridge
