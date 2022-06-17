@@ -17,14 +17,25 @@ services:
     tty: true
     volumes: 
       - "./frontend/app/:/var/www/"
-  nginx:
-    container_name: platform_frontend
+  nginx_proxy:
+    container_name: platform_proxy
     build: 
       context: .
       dockerfile: Dockerfile.nginx
+    depends_on:
+      - backend
+      - frontend
+    # links:
+    #   - backend
+    #   - frontend
+    networks:
+      - platform_net
+    ports:
+      - 80:80
+      - 443:443
     tty: true
     volumes: 
-      - "./frontend/app/:/var/www/"
+      - "./nginx:/etc/www/"
   redis:
     container_name: platform_redis
     image: redis:latest
@@ -33,4 +44,4 @@ services:
 
 networks:
   platform_net:
-    driver: bridge
+   
